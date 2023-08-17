@@ -1,0 +1,29 @@
+{
+    "name": "jshxl/tree-select",
+    "description": "A Laravel Nova field.",
+    "keywords": [
+        "laravel",
+        "nova"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": "^7.3|^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Jshxl\\TreeSelect\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Jshxl\\TreeSelect\\FieldServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
