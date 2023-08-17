@@ -23,12 +23,16 @@
                         :value="nodes"
                         @node-expand="loadChildNodes"
                         selectionMode="checkbox"
-                        @nodeSelect="getSelected"
-                        @nodeUnselect="getSelected"
                         :pt="{
                             root: {
-                                style: 'max-height: 360px'
-                            }
+                                style: 'height: 360px'
+                            },
+                            toggler: ({props, state, context}) => ({
+                                class: context.leaf ? 'invisible' : '',
+                            }),
+                            checkbox: ({props, state, context}) => ({
+                                class: context.checked ? 'p-tree-checked dark:p-tree-checked' : 'p-tree-unchecked dark:p-tree-unchecked'
+                            })
                         }"
                     />
                 </SplitterPanel>
@@ -47,6 +51,7 @@ export default {
     data() {
         return {
             nodes: [],
+            selected: [],
         }
     },
 
@@ -55,8 +60,10 @@ export default {
         // 节点初始化
         initNodes() {
             let nodes = [];
+            const isLeaf = this.field.maxLevel || 0;
             this.lists.map(item => {
                 if (item.level !== 1) return;
+                item.leaf = isLeaf === 1;
                 nodes.push(item);
             });
             this.nodes = nodes;
@@ -64,36 +71,20 @@ export default {
 
         // 获取子节点
         loadChildNodes(parent) {
-            if (parent !== null && parent.children !== undefined) return;
-            const p_code = parent === null ? '' : parent.key;
+            const pCode = parent.key;
+            const level = parent.level + 1;
 
             let nodes = [];
-            for (let code in this.lists) {
-                if (code.length !== p_code.length + 2) continue;
-                if (p_code !== '' && !code.startsWith(p_code)) continue;
-                nodes.push({key: code, label: '[' + code + ']' + this.lists[code], leaf: code.length >= 8});
-            }
-            if (parent === null) return this.nodes = nodes;
-
+            const isLeaf = this.field.maxLevel || 0;
+            this.lists.map(item => {
+                if (item.level !== level) return;
+                if (item.parent !== pCode) return;
+                item.leaf = isLeaf === item.level;
+                nodes.push(item);
+            });
             if (nodes.length === 0) parent.leaf = true;
             else parent.children = nodes;
         },
-
-        // 循环获取子节点，由于性能问题暂且弃用
-        getChildNodes(nodes, parent_code) {
-            for (let code in this.lists) {
-                if (code.length !== (parent_code === null ? 0 : parent_code.length) + 2) continue;
-                if (parent_code !== null && !code.startsWith(parent_code)) continue;
-
-                let param = {key: code, label: '[' + code + ']' + this.lists[code]};
-                if (parent_code === null || parent_code.length <= 6) {
-                    param.children = this.getChildNodes([], code);
-                }
-                nodes.push(param);
-            }
-            return nodes;
-        },
-
 
         // 数据初始化
         setInitialValue() {
@@ -103,7 +94,7 @@ export default {
                 that.initNodes();
             });
 
-            this.value = this.field.value || ''
+            // this.value = this.field.value || ''
         },
 
         /**

@@ -46,6 +46,20 @@ class TreeSelect extends Field
     public bool $nameWithCode = false;
 
     /**
+     * table显示的字段
+     *
+     * @var array
+     * */
+    public array $columns = [];
+
+    /**
+     * 最大层级
+     *
+     * @var int
+     * */
+    public int $maxLevel = 0;
+
+    /**
      * 数值转为整型
      * @param bool $boolean
      *
@@ -94,6 +108,30 @@ class TreeSelect extends Field
     }
 
     /**
+     * table显示的字段
+     * @param array $columns
+     *
+     * @return self
+     * */
+    public function columns(array $columns): self
+    {
+        $this->columns = $columns;
+        return $this;
+    }
+
+    /**
+     * 最大层级
+     * @param int $int
+     *
+     * @return self
+     * */
+    public function maxLevel(int $int = 0): self
+    {
+        $this->maxLevel = $int;
+        return $this;
+    }
+
+    /**
      * Hydrate the given attribute on the model based on the incoming request.
      * @param NovaRequest $request
      * @param string $requestAttribute
@@ -136,8 +174,10 @@ class TreeSelect extends Field
         return with(app(NovaRequest::class), function ($request) {
             return array_merge([
                 'options'      => $this->options,
+                'columns'      => $this->columns,
                 'formatInt'    => $this->formatInt,
                 'nameWithCode' => $this->nameWithCode,
+                'maxLevel'     => $this->maxLevel,
             ], parent::jsonSerialize());
         });
     }
