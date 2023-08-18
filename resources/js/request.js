@@ -5,6 +5,8 @@ export default {
     data() {
         return {
             lists: [],
+            check: {},
+            dataLists: [],
         }
     },
 
@@ -15,6 +17,24 @@ export default {
     },
 
     methods: {
+        // 初始化已选中的数据
+        initCheck(value) {
+            if (value.length === 0) return;
+            value.map(item => {
+                this.check[item] = true;
+            });
+            this.drawTable();
+        },
+
+        // 绘制dataTable
+        drawTable() {
+            let table = [];
+            this.lists.map(item => {
+                if (this.check[item.key] === undefined) return;
+                table.push(item);
+            });
+            this.dataLists = table;
+        },
 
         // 加载全量数据
         async loadLists(callback) {
@@ -24,15 +44,19 @@ export default {
             const lists = response.data.resources.map(item => {
                 let code = item.value || item.id;
                 code = _int ? parseInt(code) : code.toString();
-                if (item.parent !== null) {
-                    item.parent = _int ? parseInt(item.parent) : item.parent.toString();
-                }
-                let name = (_pre ? ('[' + code + ']') : '') + (item.display || item.name);
+
+                let p_code = item.parent || null;
+                if (p_code !== null) p_code = _int ? parseInt(p_code) : p_code.toString();
+
+                const level = item.level || 1;
+                const name = (_pre ? ('[' + code + ']') : '') + (item.display || item.name);
+
+                ['display', 'name', 'value', 'id', 'parent', 'level'].map(key => {
+                    if (item[key] !== undefined) delete item[key];
+                });
                 return {
-                    key: code,
-                    label: name,
-                    parent: item.parent,
-                    level: item.level
+                    key: code, label: name, parent: p_code, level: level,
+                    ...item
                 };
             });
             callback(lists);
