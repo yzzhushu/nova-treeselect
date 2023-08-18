@@ -71,6 +71,8 @@ export default {
                 }
                 if (inList) continue;
                 check[code] = true;
+
+                // TODO: 再把这边的逻辑梳理下，尤其是p_code赋值对code的影响
             }
             trash.map(item => {
                 delete this.selected[item];
