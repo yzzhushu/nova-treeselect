@@ -54,9 +54,8 @@ export default {
 
     methods: {
         // 获取当前选择的清单
-        pickNodes() {
+        pickNodes(node) {
             let check = {};
-            let trash = [];
             for (let code in this.selected) {
                 if (this.selected[code].checked === false) continue;
 
@@ -65,18 +64,14 @@ export default {
                 while (this.parent[p_code] !== undefined && this.parent[p_code] !== null) {
                     p_code = this.parent[p_code];
                     if (check[p_code] === undefined) continue;
-                    trash.push(code);
+                    if (node.children === undefined) {
+                        delete this.selected[code];
+                    }
                     inList = true;
                     break;
                 }
-                if (inList) continue;
-                check[code] = true;
-
-                // TODO: 再把这边的逻辑梳理下，尤其是p_code赋值对code的影响
+                if (!inList) check[code] = true;
             }
-            trash.map(item => {
-                delete this.selected[item];
-            });
             this.check = check;
             this.drawTable();
         },
@@ -127,7 +122,9 @@ export default {
                 if (item.parent !== pCode) return;
                 item.leaf = isLeaf === item.level;
                 nodes.push(item);
-                if (status1 || status3) {
+                if (status1) {
+                    this.selected[item.key] = {checked: true, partialChecked: false};
+                } else if (status3) {
                     delete this.selected[item.key];
                 }
             });
