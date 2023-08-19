@@ -1,6 +1,6 @@
 export default {
 
-    props: ['field'],
+    props: ['index', 'field'],
 
     data() {
         return {
@@ -17,6 +17,19 @@ export default {
     },
 
     methods: {
+        // index和detail页面用
+        showDataTable() {
+            if (this.lists.length > 0) return;
+            let that = this;
+            this.loadLists(function (lists) {
+                that.lists = lists;
+                const value = that.field.value || [];
+                if (value.length > 0) {
+                    that.initCheck(value);
+                }
+            });
+        },
+
         // 初始化已选中的数据
         initCheck(value) {
             if (value.length === 0) return;

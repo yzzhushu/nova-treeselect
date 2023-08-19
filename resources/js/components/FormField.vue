@@ -20,11 +20,12 @@
                 <SplitterPanel>
                     <Tree
                         v-model:selectionKeys="selected"
+                        v-model:expandedKeys="expanded"
                         :value="nodes"
-                        @node-expand="nextNodes"
+                        @nodeExpand="nextNodes"
                         selectionMode="checkbox"
-                        @nodeSelect="pickNodes"
-                        @nodeUnselect="pickNodes"
+                        @nodeSelect="addNode"
+                        @nodeUnselect="delNode"
                         :pt="{
                             root: {
                                 style: 'height: 360px'
@@ -49,12 +50,23 @@ export default {
             nodes: [],
             parent: {},
             selected: [],
+            expanded: [],
         }
     },
 
     methods: {
-        // 获取当前选择的清单
-        pickNodes(node) {
+        // 新增节点
+        addNode(node) {
+            this.pickNodes(node, 'add');
+        },
+
+        // 删除节点
+        delNode(node) {
+            this.pickNodes(node, 'del');
+        },
+
+        // 处理已选清单
+        pickNodes(node, type) {
             let check = {};
             for (let code in this.selected) {
                 if (this.selected[code].checked === false) continue;
@@ -64,7 +76,7 @@ export default {
                 while (this.parent[p_code] !== undefined && this.parent[p_code] !== null) {
                     p_code = this.parent[p_code];
                     if (check[p_code] === undefined) continue;
-                    if (node.children === undefined) {
+                    if (node.children === undefined && type === 'add') {
                         delete this.selected[code];
                     }
                     inList = true;
@@ -106,7 +118,6 @@ export default {
 
         // 获取子节点
         nextNodes(parent) {
-            if (parent.children !== undefined) return;
             const pCode = parent.key;
             const level = parent.level + 1;
 
@@ -121,6 +132,12 @@ export default {
                 if (item.level !== level) return;
                 if (item.parent !== pCode) return;
                 item.leaf = isLeaf === item.level;
+                if (item.children !== undefined) {
+                    delete item.children;
+                }
+                if (this.expanded[item.key] !== undefined) {
+                    delete this.expanded[item.key];
+                }
                 nodes.push(item);
                 if (status1) {
                     this.selected[item.key] = {checked: true, partialChecked: false};
