@@ -109,9 +109,11 @@ export default {
         initNodes() {
             let nodes = [];
             const isLeaf = this.field.maxLevel || 0;
+            const mixKey = this.field.nameWithCode || false;
             this.lists.map(item => {
                 if (item.level !== 1) return;
                 item.leaf = isLeaf === 1;
+                if (mixKey) item.label = '[' + item.key + ']' + item.label;
                 nodes.push(item);
             });
             this.nodes = nodes;
@@ -129,6 +131,7 @@ export default {
 
             let nodes = [];
             const isLeaf = this.field.maxLevel || 0;
+            const mixKey = this.field.nameWithCode || false;
             this.lists.map(item => {
                 if (item.level !== level) return;
                 if (item.parent !== pCode) return;
@@ -139,6 +142,7 @@ export default {
                 if (this.expanded[item.key] !== undefined) {
                     delete this.expanded[item.key];
                 }
+                if (mixKey) item.label = '[' + item.key + ']' + item.label;
                 nodes.push(item);
                 if (status1) {
                     this.selected[item.key] = {checked: true, partialChecked: false};

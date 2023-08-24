@@ -57,7 +57,6 @@ export default {
         // 加载全量数据
         async loadLists(callback) {
             const _int = this.field.formatInt || false;
-            const _pre = this.field.nameWithCode || false;
             const response = await Nova.request().post(this.field.options);
             const lists = response.data.resources.map(item => {
                 let code = item.value || item.id;
@@ -67,7 +66,7 @@ export default {
                 if (p_code !== null) p_code = _int ? parseInt(p_code) : p_code.toString();
 
                 const level = item.level || 1;
-                const name = (_pre ? ('[' + code + ']') : '') + (item.display || item.name);
+                const name = item.display || item.name;
 
                 ['display', 'name', 'value', 'id', 'parent', 'level'].map(key => {
                     if (item[key] !== undefined) delete item[key];
