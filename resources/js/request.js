@@ -17,7 +17,7 @@ export default {
 
         initScrollHeight() {
             const value = this.field.value || [];
-            return ((value.length + 1) * 40) + 'px';
+            return Math.min((value.length + 1) * 40, 360) + 'px';
         }
     },
 
