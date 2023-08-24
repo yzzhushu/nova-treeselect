@@ -13,6 +13,11 @@ export default {
     computed: {
         columns() {
             return this.field.columns;
+        },
+
+        initScrollHeight() {
+            const value = this.field.value || [];
+            return ((value.length + 1) * 40) + 'px';
         }
     },
 

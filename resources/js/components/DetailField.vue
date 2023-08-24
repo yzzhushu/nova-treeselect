@@ -5,7 +5,7 @@
                 <HxTable
                     :columns="columns"
                     :lists="dataLists"
-                    scrollHeight="360px"
+                    :scrollHeight="initScrollHeight"
                     class="min-w-[24rem] max-w-2xl"
                     style="max-height: calc(360px + .5rem)"
                 />

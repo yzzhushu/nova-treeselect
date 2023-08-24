@@ -17,6 +17,7 @@
                     <HxTable
                         :columns="columns"
                         :lists="dataLists"
+                        :scrollHeight="initScrollHeight"
                         class="min-w-[24rem] max-w-2xl"
                         style="max-height: calc(360px + .5rem)"
                     />
@@ -30,23 +31,6 @@
 <script>
 import request from "../request";
 export default {
-    mixins: [request],
-
-    mounted() {
-        try {
-            const value = this.field.value || [];
-            const field = this.columns;
-            this.dataLists = value.map(item => {
-                let data = {};
-                field.map(col => {
-                    data[col.field] = item;
-                });
-                return data;
-            });
-        } catch (e) {
-            console.error('Tree select init failed')
-            console.error(e);
-        }
-    }
+    mixins: [request]
 }
 </script>
