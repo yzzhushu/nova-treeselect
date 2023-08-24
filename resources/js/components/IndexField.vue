@@ -33,7 +33,20 @@ export default {
     mixins: [request],
 
     mounted() {
-        this.initTableHeight();
+        try {
+            const value = this.field.value || [];
+            const field = this.columns;
+            this.dataLists = value.map(item => {
+                let data = {};
+                field.map(col => {
+                    data[col.field] = item;
+                });
+                return data;
+            });
+        } catch (e) {
+            console.error('Tree select init failed')
+            console.error(e);
+        }
     }
 }
 </script>
