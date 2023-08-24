@@ -108,14 +108,14 @@ export default {
         // 节点初始化
         initNodes() {
             let nodes = [];
-            const _lists = {...this.lists};
             const isLeaf = this.field.maxLevel || 0;
             const mixKey = this.field.nameWithCode || false;
-            _lists.map(item => {
+            this.lists.map(item => {
                 if (item.level !== 1) return;
-                item.leaf = isLeaf === 1;
-                if (mixKey) item.label = '[' + item.key + ']' + item.label;
-                nodes.push(item);
+                let node = {...item};
+                node.leaf = isLeaf === 1;
+                if (mixKey) node.label = '[' + node.key + ']' + node.label;
+                nodes.push(node);
             });
             this.nodes = nodes;
         },
@@ -131,25 +131,25 @@ export default {
                     this.selected[pCode].partialChecked === false);             // 未选中状态
 
             let nodes = [];
-            const _lists = {...this.lists};
             const isLeaf = this.field.maxLevel || 0;
             const mixKey = this.field.nameWithCode || false;
-            _lists.map(item => {
+            this.lists.map(item => {
                 if (item.level !== level) return;
                 if (item.parent !== pCode) return;
-                item.leaf = isLeaf === item.level;
-                if (item.children !== undefined) {
-                    delete item.children;
+                let node = {...item};
+                node.leaf = isLeaf === node.level;
+                if (node.children !== undefined) {
+                    delete node.children;
                 }
-                if (this.expanded[item.key] !== undefined) {
-                    delete this.expanded[item.key];
+                if (this.expanded[node.key] !== undefined) {
+                    delete this.expanded[node.key];
                 }
-                if (mixKey) item.label = '[' + item.key + ']' + item.label;
-                nodes.push(item);
+                if (mixKey) node.label = '[' + node.key + ']' + node.label;
+                nodes.push(node);
                 if (status1) {
-                    this.selected[item.key] = {checked: true, partialChecked: false};
+                    this.selected[node.key] = {checked: true, partialChecked: false};
                 } else if (status3) {
-                    delete this.selected[item.key];
+                    delete this.selected[node.key];
                 }
             });
             if (nodes.length === 0) parent.leaf = true;
