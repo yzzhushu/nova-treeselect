@@ -108,9 +108,10 @@ export default {
         // 节点初始化
         initNodes() {
             let nodes = [];
+            const _lists = {...this.lists};
             const isLeaf = this.field.maxLevel || 0;
             const mixKey = this.field.nameWithCode || false;
-            this.lists.map(item => {
+            _lists.map(item => {
                 if (item.level !== 1) return;
                 item.leaf = isLeaf === 1;
                 if (mixKey) item.label = '[' + item.key + ']' + item.label;
@@ -130,9 +131,10 @@ export default {
                     this.selected[pCode].partialChecked === false);             // 未选中状态
 
             let nodes = [];
+            const _lists = {...this.lists};
             const isLeaf = this.field.maxLevel || 0;
             const mixKey = this.field.nameWithCode || false;
-            this.lists.map(item => {
+            _lists.map(item => {
                 if (item.level !== level) return;
                 if (item.parent !== pCode) return;
                 item.leaf = isLeaf === item.level;
