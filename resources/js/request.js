@@ -17,6 +17,24 @@ export default {
     },
 
     methods: {
+        // 初始化dataTable高度
+        initTableHeight() {
+            try {
+                const value = this.field.value || [];
+                const field = this.columns;
+                this.dataLists = value.map(item => {
+                    let data = {};
+                    field.map(col => {
+                        data[col.field] = item;
+                    });
+                    return data;
+                });
+            } catch (e) {
+                console.error('Tree select init failed')
+                console.error(e);
+            }
+        },
+
         // index和detail页面用
         showDataTable() {
             if (this.lists.length > 0) return;

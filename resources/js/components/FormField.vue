@@ -14,6 +14,7 @@
                     <HxTable
                         :columns="columns"
                         :lists="dataLists"
+                        scrollHeight="360px"
                         style="min-height: 360px"
                     />
                 </SplitterPanel>

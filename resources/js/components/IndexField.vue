@@ -30,6 +30,10 @@
 <script>
 import request from "../request";
 export default {
-    mixins: [request]
+    mixins: [request],
+
+    mounted() {
+        this.initTableHeight();
+    }
 }
 </script>

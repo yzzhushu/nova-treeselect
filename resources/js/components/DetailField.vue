@@ -19,6 +19,7 @@ export default {
     mixins: [request],
 
     mounted() {
+        this.initTableHeight();
         this.showDataTable();
     },
 }
