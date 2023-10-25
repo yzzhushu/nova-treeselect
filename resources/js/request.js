@@ -57,7 +57,8 @@ export default {
         // 加载全量数据
         async loadLists(callback) {
             const _int = this.field.formatInt || false;
-            const response = await Nova.request().post(this.field.options);
+            const _method = this.field.method || 'get';
+            const response = await Nova.request()[_method](this.field.options);
             const lists = response.data.resources.map(item => {
                 let code = item.value || item.id;
                 code = _int ? parseInt(code) : code.toString();

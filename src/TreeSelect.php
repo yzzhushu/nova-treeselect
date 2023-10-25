@@ -53,6 +53,13 @@ class TreeSelect extends Field
     public array $columns = [];
 
     /**
+     * option默认请求方式
+     *
+     * @var string
+     * */
+    public string $method = 'get';
+
+    /**
      * 最大层级
      *
      * @var int
@@ -120,6 +127,19 @@ class TreeSelect extends Field
     }
 
     /**
+     * 默认请求方式
+     * @param string $method
+     *
+     * @return self
+     * */
+    public function method(string $method = 'post'): self
+    {
+        $method = strtolower($method);
+        $this->method = in_array($method, ['get', 'post']) ? $method : 'get';
+        return $this;
+    }
+
+    /**
      * 最大层级
      * @param int $int
      *
@@ -178,6 +198,7 @@ class TreeSelect extends Field
                 'formatInt'    => $this->formatInt,
                 'nameWithCode' => $this->nameWithCode,
                 'maxLevel'     => $this->maxLevel,
+                'method'       => $this->method,
             ], parent::jsonSerialize());
         });
     }
