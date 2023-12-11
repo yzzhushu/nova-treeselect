@@ -1,6 +1,6 @@
 <template>
     <DefaultField
-        :field="field"
+        :field="currentField"
         :errors="errors"
         :show-help-text="showHelpText"
         :full-width-content="fullWidthContent"
@@ -40,11 +40,11 @@
 </template>
 
 <script>
-import {FormField, HandlesValidationErrors} from 'laravel-nova';
+import {DependentFormField, HandlesValidationErrors} from 'laravel-nova';
 import request from "../request";
 
 export default {
-    mixins: [FormField, HandlesValidationErrors, request],
+    mixins: [DependentFormField, HandlesValidationErrors, request],
 
     data() {
         return {
@@ -108,8 +108,8 @@ export default {
         // 节点初始化
         initNodes() {
             let nodes = [];
-            const isLeaf = this.field.maxLevel || 0;
-            const mixKey = this.field.nameWithCode || false;
+            const isLeaf = this.currentField.maxLevel || 0;
+            const mixKey = this.currentField.nameWithCode || false;
             this.lists.map(item => {
                 if (item.level !== 1) return;
                 let node = {...item};
@@ -131,8 +131,8 @@ export default {
                     this.selected[pCode].partialChecked === false);             // 未选中状态
 
             let nodes = [];
-            const isLeaf = this.field.maxLevel || 0;
-            const mixKey = this.field.nameWithCode || false;
+            const isLeaf = this.currentField.maxLevel || 0;
+            const mixKey = this.currentField.nameWithCode || false;
             this.lists.map(item => {
                 if (item.level !== level) return;
                 if (item.parent !== pCode) return;
@@ -159,7 +159,7 @@ export default {
         // 数据初始化
         setInitialValue() {
             let that = this;
-            const value = this.field.value || [];
+            const value = this.currentField.value || [];
             this.loadLists(function (lists) {
                 that.lists = lists;
 

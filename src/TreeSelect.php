@@ -6,10 +6,13 @@ use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\Field;
+use Laravel\Nova\Fields\SupportsDependentFields;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class TreeSelect extends Field
 {
+    use SupportsDependentFields;
+
     /**
      * The field's component.
      *
